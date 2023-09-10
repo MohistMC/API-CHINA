@@ -4,11 +4,11 @@ import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import mjson.Json;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
@@ -41,11 +41,12 @@ public class MohistChinaAPI {
     @PostConstruct
     public void init() {
         System.out.println("初始化后端");
+        run0();
         syncMohistAPI();
     }
 
     public void syncMohistAPI() {
-        LIVE.scheduleAtFixedRate(this::run0, 1000, 1000 * 5, TimeUnit.MILLISECONDS); // 5分钟同步一次 时间单位毫秒
+        LIVE.scheduleAtFixedRate(this::run0, 1000, 1000 * 5 * 60 * 3, TimeUnit.MILLISECONDS); // 3分钟同步一次 时间单位毫秒
     }
 
     @SneakyThrows
@@ -89,6 +90,7 @@ public class MohistChinaAPI {
     }
 
     public static void downloadFile(String URL, File f) throws Exception {
+        System.out.println("下载文件中: " + URL);
         URLConnection conn = getConn(URL);
         ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
         FileChannel fc = FileChannel.open(f.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -96,12 +98,14 @@ public class MohistChinaAPI {
         fc.transferFrom(rbc, 0, Long.MAX_VALUE);
         fc.close();
         rbc.close();
+        System.out.println("下载完毕: " + URL);
     }
 
     public static URLConnection getConn(String URL) {
         URLConnection conn = null;
         try {
-            conn = new URL(URL).openConnection();
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new java.net.InetSocketAddress("127.0.0.1", 7890));
+            conn = new URL(URL).openConnection(proxy);
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0");
         } catch (IOException e) {
             e.fillInStackTrace();
