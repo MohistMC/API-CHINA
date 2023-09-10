@@ -91,7 +91,7 @@ public class MohistChinaAPI {
 
     public static void downloadFile(String URL, File f) throws Exception {
         System.out.println("下载文件中: " + URL);
-        URLConnection conn = getConn(URL);
+        URLConnection conn = getConn(URL, true);
         ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
         FileChannel fc = FileChannel.open(f.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 
@@ -101,11 +101,12 @@ public class MohistChinaAPI {
         System.out.println("下载完毕: " + URL);
     }
 
-    public static URLConnection getConn(String URL) {
+    public static URLConnection getConn(String URL, boolean useProxy) {
         URLConnection conn = null;
         try {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new java.net.InetSocketAddress("127.0.0.1", 7890));
-            conn = new URL(URL).openConnection(proxy);
+            URL url = new URL(URL);
+            conn = useProxy ? url.openConnection(proxy) : url.openConnection();
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0");
         } catch (IOException e) {
             e.fillInStackTrace();
