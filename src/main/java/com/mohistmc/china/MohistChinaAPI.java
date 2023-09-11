@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class MohistChinaAPI {
 
     public static Map<String, String> dataMap = new HashMap<>();
-    public static List<String> versionList = List.of("1.7.10", "1.12.2", "1.16.5", "1.18.2", "1.19.2", "1.19.4", "1.20.1");
+    public static List<String> versionList = List.of("1.16.5", "1.18.2", "1.19.2", "1.19.4", "1.20.1");
 
     public static final ScheduledExecutorService LIVE = new ScheduledThreadPoolExecutor(4, new NamedThreadFactory("syncMohistAPI - "));
 
