@@ -1,5 +1,7 @@
 package com.mohistmc.china;
 
+import lombok.SneakyThrows;
+import mjson.Json;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.net.URL;
 
 /**
  * @author Mgazul by MohistMC
@@ -22,8 +25,19 @@ import java.io.File;
 @RequestMapping("/api")
 public class ApiController {
 
+    @SneakyThrows
+    @GetMapping("/{variable}/latest")
+    public String latest(@PathVariable String variable) {
+        Json mohist = Json.read(new URL("https://mohistmc.com/api/" + variable + "/latest"));
+        Json json = Json.object(
+                "number", mohist.at("number").asInteger(),
+                "md5", mohist.at("md5").asString(),
+                "url", "http://s1.devicloud.cn:32023/api/" + variable+ "/latest/download");
+        return json.toString();
+    }
+
     @GetMapping("/{variable}/latest/download")
-    public ResponseEntity<Resource> hello(@PathVariable String variable) {
+    public ResponseEntity<Resource> download(@PathVariable String variable) {
 
         try {
             File folder = new File("mohist/" + variable, MohistChinaAPI.dataMap.get(variable));
