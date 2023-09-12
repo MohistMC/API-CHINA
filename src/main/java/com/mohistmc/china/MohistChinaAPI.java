@@ -41,6 +41,10 @@ public class MohistChinaAPI {
     @PostConstruct
     public void init() {
         System.out.println("初始化后端");
+        System.setProperty("https.proxyHost", "127.0.0.1");
+        System.setProperty("https.proxyPort", "7890");
+        dataMap.put("1.7.10", "Mohist-1.7.10-46-server.jar");
+        dataMap.put("1.12.2", "mohist-1.12.2-320-server.jar");
         run0();
         syncMohistAPI();
     }
@@ -55,7 +59,6 @@ public class MohistChinaAPI {
             Json json = Json.read(new URL("https://mohistmc.com/api/" + version + "/latest"));
             String url = json.at("url").asString();
             File mohist = new File("mohist/" + version, json.at("name").asString());
-
             File folder = new File("mohist", version);
             if (folder.exists() && folder.isDirectory()) {
                 File[] files = folder.listFiles();
