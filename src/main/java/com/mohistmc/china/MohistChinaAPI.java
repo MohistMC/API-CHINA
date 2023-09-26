@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class MohistChinaAPI {
 
     public static Map<String, String> dataMap = new HashMap<>();
-    public static List<String> versionList = List.of("1.16.5", "1.18.2", "1.19.2", "1.19.4", "1.20.1");
+    public static List<String> versionList = List.of("1.16.5", "1.18.2", "1.19.2", "1.19.4", "1.20.1", "1.20.2");
 
     public static final ScheduledExecutorService LIVE = new ScheduledThreadPoolExecutor(4, new NamedThreadFactory("syncMohistAPI - "));
 
@@ -44,7 +44,7 @@ public class MohistChinaAPI {
         System.setProperty("https.proxyHost", "127.0.0.1");
         System.setProperty("https.proxyPort", "7890");
         dataMap.put("1.7.10", "Mohist-1.7.10-46-server.jar");
-        dataMap.put("1.12.2", "mohist-1.12.2-320-server.jar");
+        dataMap.put("1.12.2", "mohist-1.12.2-343-server.jar");
         run0();
         syncMohistAPI();
     }

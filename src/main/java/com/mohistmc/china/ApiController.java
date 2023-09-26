@@ -28,6 +28,10 @@ public class ApiController {
     @SneakyThrows
     @GetMapping("/{variable}/latest")
     public String latest(@PathVariable String variable) {
+        if (variable.equals("1.12.2")) {
+            Json json = Json.object("number", 343, "md5", "d5256adbddc6fea7837ee2fdf88ae0f0", "url", "http://s1.devicloud.cn:32023/api/" + variable + "/latest/download");
+            return json.toString();
+        }
         Json mohist = Json.read(new URL("https://mohistmc.com/api/" + variable + "/latest"));
         Json json = Json.object(
                 "number", mohist.at("number").asInteger(),
