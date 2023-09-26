@@ -56,9 +56,13 @@ public class MohistChinaAPI {
     @SneakyThrows
     private void run0() {
         for (String version : versionList) {
-            Json json = Json.read(new URL("https://mohistmc.com/api/" + version + "/latest"));
-            String url = json.at("url").asString();
-            File mohist = new File("mohist/" + version, json.at("name").asString());
+            String v1 = "https://mohistmc.com/api/%s/latest";
+            String v2 = "https://mohistmc.com/api/v2/sources/jenkins/Mohist-%s/builds/latest";
+            Json json = Json.read(new URL(v2.formatted(version)));
+            String url = json.asString("originUrl");
+            int number = json.asInteger("id");
+            String jarName = "mohist-%s-%s-server.jar".formatted(version, number);
+            File mohist = new File("mohist/" + version, jarName);
             File folder = new File("mohist", version);
             if (folder.exists() && folder.isDirectory()) {
                 File[] files = folder.listFiles();
@@ -69,7 +73,7 @@ public class MohistChinaAPI {
                             file.delete(); // 删除旧版本jar
                         } else {
                             // 添加一次MD5检测
-                            if (!MD5Util.getMd5(file).equals(json.at("md5").asString())) {
+                            if (!MD5Util.getMd5(file).equals(json.asString("fileMd5"))) {
                                 canDownload.put(version, false);
                                 downloadFile(url, mohist);
                                 canDownload.put(version, true);
