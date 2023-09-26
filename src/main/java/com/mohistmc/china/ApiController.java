@@ -32,10 +32,11 @@ public class ApiController {
             Json json = Json.object("number", 343, "md5", "d5256adbddc6fea7837ee2fdf88ae0f0", "url", "http://s1.devicloud.cn:32023/api/" + variable + "/latest/download");
             return json.toString();
         }
-        Json mohist = Json.read(new URL("https://mohistmc.com/api/" + variable + "/latest"));
+        String v2 = "https://mohistmc.com/api/v2/sources/jenkins/Mohist-%s/builds/latest";
+        Json mohist = Json.read(new URL(v2.formatted(variable)));
         Json json = Json.object(
-                "number", mohist.at("number").asInteger(),
-                "md5", mohist.at("md5").asString(),
+                "number", mohist.asInteger("id"),
+                "md5", mohist.asString("fileMd5"),
                 "url", "http://s1.devicloud.cn:32023/api/" + variable+ "/latest/download");
         return json.toString();
     }
