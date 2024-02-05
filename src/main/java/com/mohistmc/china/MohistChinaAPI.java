@@ -1,5 +1,6 @@
 package com.mohistmc.china;
 
+import com.mohistmc.tools.MD5Util;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import mjson.Json;
@@ -46,6 +47,7 @@ public class MohistChinaAPI {
         dataMap.put("1.7.10", "Mohist-1.7.10-46-server.jar");
         dataMap.put("1.12.2", "mohist-1.12.2-343-server.jar");
         run0();
+        System.out.println("初始化后端完毕");
         syncMohistAPI();
     }
 
@@ -73,7 +75,7 @@ public class MohistChinaAPI {
                             file.delete(); // 删除旧版本jar
                         } else {
                             // 添加一次MD5检测
-                            if (!MD5Util.getMd5(file).equals(json.asString("fileMd5"))) {
+                            if (!MD5Util.get(file).equals(json.asString("fileMd5"))) {
                                 canDownload.put(version, false);
                                 downloadFile(url, mohist);
                                 canDownload.put(version, true);

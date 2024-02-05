@@ -21,14 +21,4 @@ public class NamedThreadFactory implements ThreadFactory {
         thread.setPriority(4);
         return thread;
     }
-
-    public static class AssignableThread extends Thread {
-        public AssignableThread(Runnable run) {
-            super(run);
-        }
-
-        public AssignableThread() {
-            super();
-        }
-    }
 }

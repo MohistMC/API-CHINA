@@ -1,5 +1,7 @@
 package com.mohistmc.china;
 
+import java.io.File;
+import java.net.URI;
 import lombok.SneakyThrows;
 import mjson.Json;
 import org.springframework.core.io.Resource;
@@ -10,9 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.File;
-import java.net.URL;
 
 /**
  * @author Mgazul by MohistMC
@@ -33,7 +32,7 @@ public class ApiController {
             return json.toString();
         }
         String v2 = "https://mohistmc.com/api/v2/sources/jenkins/Mohist-%s/builds/latest";
-        Json mohist = Json.read(new URL(v2.formatted(variable)));
+        Json mohist = Json.read(URI.create(v2.formatted(variable)).toURL());
         Json json = Json.object(
                 "number", mohist.asInteger("id"),
                 "md5", mohist.asString("fileMd5"),
